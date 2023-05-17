@@ -1,3 +1,6 @@
+## REQUIREMENT
+- Docker version 23.0.5
+
 ## HOW TO RUN
 1. Install mysql in local:
 
@@ -10,6 +13,11 @@
 To rerun specific service
   ```powershell
     docker-compose up --build --force-recreate <service_name> 
+  ```
+To go to docker cmd
+  ```powershell
+    docker ps
+    docker exec -it <container_id> /bin/sh
   ```
 
 4. Go to docker cmd and run: 
