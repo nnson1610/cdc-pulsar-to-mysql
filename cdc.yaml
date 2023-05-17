@@ -1,0 +1,30 @@
+tenant: "public"
+namespace: "default"
+name: "debezium-mysql-source"
+topicName: "debezium-mysql-topic"
+archive: "connectors/pulsar-io-debezium-mysql-3.0.0.nar"
+parallelism: 1
+
+configs:
+
+    ## config for mysql, docker image: debezium/example-mysql:0.8
+    database.hostname: "192.168.10.31"
+    database.port: "3307"
+    database.user: "user"
+    database.password: "password"
+    database.server.id: "184054"
+    database.server.name: "dbserver1"
+    database.whitelist: "inventory"
+    database.history: "org.apache.pulsar.io.debezium.PulsarDatabaseHistory"
+    database.history.pulsar.topic: "history-topic"
+    database.history.pulsar.service.url: "pulsar://localhost:6650"
+
+    ## KEY_CONVERTER_CLASS_CONFIG, VALUE_CONVERTER_CLASS_CONFIG
+    key.converter: "org.apache.kafka.connect.json.JsonConverter"
+    value.converter: "org.apache.kafka.connect.json.JsonConverter"
+
+    ## PULSAR_SERVICE_URL_CONFIG
+    pulsar.service.url: "pulsar://localhost:6650"
+
+    ## OFFSET_STORAGE_TOPIC_CONFIG
+    offset.storage.topic: "offset-topic"

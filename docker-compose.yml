@@ -1,0 +1,60 @@
+# http://localhost:9527 (login:use API to set user/pass)
+# CSRF_TOKEN=$(curl http://localhost:7750/pulsar-manager/csrf-token)
+# curl --verbose -H 'X-XSRF-TOKEN: $CSRF_TOKEN' -H 'Cookie: XSRF-TOKEN=$CSRF_TOKEN;' -H 'Content-Type: application/json' -X PUT http://shop_pulsar_manager:7750/pulsar-manager/users/superuser -d '{"name": "pulsar", "password": "pulsar", "description": "Pulsar Manager Admin", "email": "support@pulsar.io"}'
+
+version: '3'
+networks:
+  pulsar:
+    driver: bridge
+
+services:
+  pulsar:
+      image: apachepulsar/pulsar:latest
+      container_name: pulsar_cluster
+      # command: bin/pulsar standalone && bin/pulsar-admin source localrun  --sourceConfigFile cdc.yaml
+      # command: bash -c "bin/pulsar standalone && sleep 5 && echo ddad && bin/pulsar-admin source localrun --sourceConfigFile cdc.yaml"
+      hostname: pulsar
+      # entrypoint: /entrypoint.sh
+      environment:
+        PULSAR_MEM: " -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
+      volumes:
+        - ./tools/pulsar/data:/pulsar/data
+      ports:
+        - 6650:6650
+        - 8080:8080 # http://localhost:8080/metrics/
+      restart: unless-stopped
+      build:
+        context: ./
+        dockerfile: ./Dockerfile
+      networks:
+        - pulsar
+  pulsar-manager: 
+    image: apachepulsar/pulsar-manager:latest
+    container_name: pulsar_manager
+    ports:
+      - 9527:9527 
+      - 7750:7750
+    depends_on:
+      - pulsar
+    links:
+      - pulsar
+    environment:
+      SPRING_CONFIGURATION_FILE: /pulsar-manager/pulsar-manager/application.properties
+    networks:
+      - pulsar
+  mysql:
+    image: mysql:latest
+    volumes:
+      - "./.mysql-data/db:/var/lib/mysql"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3307:3307
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventory
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_TCP_PORT: 3307
+    networks:
+      - pulsar
