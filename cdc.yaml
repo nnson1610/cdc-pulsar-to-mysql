@@ -6,9 +6,8 @@ archive: "connectors/pulsar-io-debezium-mysql-3.0.0.nar"
 parallelism: 1
 
 configs:
-
     ## config for mysql, docker image: debezium/example-mysql:0.8
-    database.hostname: "192.168.10.31"
+    database.hostname: "localhost" # local IPs
     database.port: "3307"
     database.user: "user"
     database.password: "password"
