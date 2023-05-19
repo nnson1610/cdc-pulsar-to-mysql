@@ -8,7 +8,7 @@
 
 3. Run docker compose command: 
   ```powershell
-    docker-compose up
+    docker-compose up --build
   ```
 To rerun specific service
   ```powershell
@@ -19,7 +19,7 @@ To go to docker cmd
     docker ps
     docker exec -it <container_id> /bin/sh
   ```
-
+  
 4. Go to docker cmd and run: 
   ```powershell
     bin/pulsar-admin source localrun  --sourceConfigFile cdc.yaml
@@ -29,7 +29,7 @@ To go to docker cmd
     bin/pulsar-admin topics list public/default
   ```
 
-6. View message consume:
+6. Consume message:
   ```powershell
     bin/pulsar-client consume -s "sub-tank" public/default/dbserver1.inventory.tank -n 0
   ```
@@ -42,7 +42,8 @@ To go to docker cmd
   ```
 2. MySQL commands:
   ```powershell
-    insert into inventory values (1)
+    create table <table_name> ( <column1>: <datatype>, <column2>: <datatype2>) 
+    insert into <table_name> values (<value1>,<value2>)
   ```
 
 ## PULSAR MANAGER
